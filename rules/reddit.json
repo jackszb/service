@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "rules": [
+    {
+      "domain_suffix": [
+        "redd.it",
+        "reddit.com",
+        "redditmail.com",
+        "redditmedia.com",
+        "redditstatic.com"
+      ]
+    }
+  ]
+}
