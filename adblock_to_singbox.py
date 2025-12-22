@@ -8,11 +8,31 @@ import yaml
 
 # 🆓 AdBlock 规则下载链接
 URLS = [
-    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/bilibili.yml", "name": "bilibili"},
-    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/wechat.yml", "name": "wechat"},
-    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/weibo.yml", "name": "weibo"}
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/bilibili.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/wechat.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/weibo.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/iqiyi.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/amazon.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/apple_streaming.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/cloudflare.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/youtube.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/whatsapp.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/twitter.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/facebook.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/telegram.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/spotify.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/reddit.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/tiktok.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/discord.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/dropbox.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/chatgpt.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/instagram.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/netflix.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/line.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/vimeo.yml"
 ]
 
+# 输出目录
 OUTPUT_DIR = "rules"
 os.makedirs(OUTPUT_DIR, exist_ok=True)  # 确保输出目录存在
 
@@ -40,9 +60,8 @@ def extract_from_yaml(yaml_data):
     return domains
 
 # 下载并解析域名
-for item in URLS:
-    url = item["url"]
-    name = item["name"]
+for url in URLS:
+    name = url.split("/")[-1].split(".")[0]  # 从 URL 中提取文件名（不带扩展名）
 
     print(f"Downloading: {url}")
     with urllib.request.urlopen(url) as r:
