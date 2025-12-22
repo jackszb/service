@@ -4,78 +4,70 @@ import re
 import urllib.request
 import os
 import subprocess
+import yaml
 
+# 🆓 AdBlock 规则下载链接
 URLS = [
-    # 🆓 AdBlock 规则下载链接
-    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/bilibili.yml",
-    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/wechat.yml",
-    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/weibo.yml"
+    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/bilibili.yml", "name": "bilibili"},
+    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/wechat.yml", "name": "wechat"},
+    {"url": "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/weibo.yml", "name": "weibo"}
 ]
 
 OUTPUT_DIR = "rules"
-OUTPUT_JSON = os.path.join(OUTPUT_DIR, "block.json")  # JSON 文件
-OUTPUT_SRS = os.path.join(OUTPUT_DIR, "block.srs")    # 二进制 SRS 文件
+os.makedirs(OUTPUT_DIR, exist_ok=True)  # 确保输出目录存在
 
-domains = set()
+def extract_from_yaml(yaml_data):
+    """从 YAML 数据中提取域名"""
+    domains = set()
+    if 'rules' in yaml_data:
+        for line in yaml_data['rules']:
+            # 解析符合 AdBlock 格式的域名
+            if line.startswith("||"):
+                domain = line[2:]
+            elif line.startswith("|"):
+                domain = line[1:]
+            else:
+                continue
 
-def extract(line: str):
-    line = line.strip()
+            if domain.endswith("^"):
+                domain = domain[:-1]
 
-    if not line:
-        return None
-    if line.startswith(("!", "#", "@@")):
-        return None
+            if "/" in domain or "?" in domain:
+                continue
 
-    if line.startswith("||"):
-        d = line[2:]
-    elif line.startswith("|"):
-        d = line[1:]
-    else:
-        return None
-
-    if d.endswith("^"):
-        d = d[:-1]
-
-    if "/" in d or "?" in d:
-        return None
-
-    if re.fullmatch(r"[A-Za-z0-9.-]+", d):
-        return d.lower()
-
-    return None
-
-
-# 确保输出目录存在
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+            if re.fullmatch(r"[A-Za-z0-9.-]+", domain):
+                domains.add(domain.lower())
+    return domains
 
 # 下载并解析域名
-for url in URLS:
+for item in URLS:
+    url = item["url"]
+    name = item["name"]
+
     print(f"Downloading: {url}")
     with urllib.request.urlopen(url) as r:
-        text = r.read().decode("utf-8", errors="ignore")
-        for line in text.splitlines():
-            d = extract(line)
-            if d:
-                domains.add(d)
+        yaml_data = yaml.safe_load(r.read())
+        domains = extract_from_yaml(yaml_data)
 
-# 构建 sing-box rule-set v3 JSON
-output = {
-    "version": 3,
-    "rules": [
-        {
-            "domain_suffix": sorted(domains)
+        # 生成 JSON 文件
+        output_json = os.path.join(OUTPUT_DIR, f"{name}.json")
+        output = {
+            "version": 3,
+            "rules": [
+                {
+                    "domain_suffix": sorted(domains)
+                }
+            ]
         }
-    ]
-}
 
-# 写入 JSON 文件
-with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-    json.dump(output, f, indent=2, ensure_ascii=False)
+        with open(output_json, "w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2, ensure_ascii=False)
 
-print(f"Done: {len(domains)} domains written to {OUTPUT_JSON}")
+        print(f"Done: {len(domains)} domains written to {output_json}")
 
-# 调用 sing-box 编译生成 SRS
-print(f"Compiling SRS to {OUTPUT_SRS} ...")
-subprocess.run(["sing-box", "rule-set", "compile", OUTPUT_JSON, "-o", OUTPUT_SRS], check=True)
+        # 调用 sing-box 编译生成 SRS
+        output_srs = os.path.join(OUTPUT_DIR, f"{name}.srs")
+        print(f"Compiling SRS to {output_srs} ...")
+        subprocess.run(["sing-box", "rule-set", "compile", output_json, "-o", output_srs], check=True)
 
-print(f"Done: SRS written to {OUTPUT_SRS}")
+        print(f"Done: SRS written to {output_srs}")
