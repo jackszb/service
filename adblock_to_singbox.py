@@ -11,8 +11,12 @@ URLS = [
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/bilibili.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/wechat.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/weibo.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/xiaohongshu.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/iqiyi.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/amazon.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/ebay.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/amazon_streaming.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/disneyplus.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/apple_streaming.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/cloudflare.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/youtube.yml",
@@ -29,7 +33,9 @@ URLS = [
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/instagram.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/netflix.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/line.yml",
-    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/vimeo.yml"
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/vimeo.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/linkedin.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/pinterest.yml"
 ]
 
 # 输出目录
