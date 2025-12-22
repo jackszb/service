@@ -3,6 +3,7 @@ import json
 import re
 import urllib.request
 import os
+import subprocess
 
 URLS = [
     # 🆓 AdBlock 规则下载链接
@@ -12,7 +13,8 @@ URLS = [
 ]
 
 OUTPUT_DIR = "rules"
-OUTPUT_JSON = os.path.join(OUTPUT_DIR, "free.json")
+OUTPUT_JSON = os.path.join(OUTPUT_DIR, "block.json")  # JSON 文件
+OUTPUT_SRS = os.path.join(OUTPUT_DIR, "block.srs")    # 二进制 SRS 文件
 
 domains = set()
 
@@ -43,8 +45,10 @@ def extract(line: str):
     return None
 
 
+# 确保输出目录存在
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+# 下载并解析域名
 for url in URLS:
     print(f"Downloading: {url}")
     with urllib.request.urlopen(url) as r:
@@ -54,6 +58,7 @@ for url in URLS:
             if d:
                 domains.add(d)
 
+# 构建 sing-box rule-set v3 JSON
 output = {
     "version": 3,
     "rules": [
@@ -63,7 +68,14 @@ output = {
     ]
 }
 
+# 写入 JSON 文件
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
 print(f"Done: {len(domains)} domains written to {OUTPUT_JSON}")
+
+# 调用 sing-box 编译生成 SRS
+print(f"Compiling SRS to {OUTPUT_SRS} ...")
+subprocess.run(["sing-box", "rule-set", "compile", OUTPUT_JSON, "-o", OUTPUT_SRS], check=True)
+
+print(f"Done: SRS written to {OUTPUT_SRS}")
