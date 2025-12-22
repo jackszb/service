@@ -23,7 +23,7 @@ jobs:
 
       - name: Download & convert AdBlock rules
         run: |
-          python scripts/adblock_to_singbox.py
+          python adblock_to_singbox.py
 
       - name: Install sing-box
         run: |
