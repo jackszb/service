@@ -21,22 +21,22 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Download & convert AdBlock rules
-        run: |
-          python adblock_to_singbox.py
-
       - name: Install sing-box
         run: |
           curl -fsSL https://sing-box.app/install.sh | sh
 
-      - name: Compile rule-set
+      - name: Download & convert AdBlock rules
         run: |
-          sing-box rule-set compile rules/free.json -o rules/free.srs
+          python adblock_to_singbox.py
+
+      - name: Compile rule-set to SRS
+        run: |
+          sing-box rule-set compile rules/block.json -o rules/block.srs
 
       - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add rules/free.json rules/free.srs
+          git add rules/block.json rules/block.srs
           git diff --cached --quiet || git commit -m "Update free rules"
           git push
