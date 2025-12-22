@@ -21,9 +21,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install sing-box
+      - name: Install required Python packages
         run: |
-          curl -fsSL https://sing-box.app/install.sh | sh
+          python -m pip install --upgrade pip
+          pip install pyyaml
 
       - name: Download & convert AdBlock rules
         run: |
@@ -31,12 +32,14 @@ jobs:
 
       - name: Compile rule-set to SRS
         run: |
-          sing-box rule-set compile rules/block.json -o rules/block.srs
+          sing-box rule-set compile rules/bilibili.json -o rules/bilibili.srs
+          sing-box rule-set compile rules/wechat.json -o rules/wechat.srs
+          sing-box rule-set compile rules/weibo.json -o rules/weibo.srs
 
       - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add rules/block.json rules/block.srs
+          git add rules/*.json rules/*.srs
           git diff --cached --quiet || git commit -m "Update free rules"
           git push
