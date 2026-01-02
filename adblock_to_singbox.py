@@ -35,6 +35,7 @@ URLS = [
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/line.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/vimeo.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/linkedin.yml",
+    "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/4chan.yml",
     "https://raw.githubusercontent.com/AdguardTeam/HostlistsRegistry/main/services/pinterest.yml"
 ]
 
